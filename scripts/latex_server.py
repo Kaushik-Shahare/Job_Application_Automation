@@ -14,6 +14,10 @@ def clean_latex_content(content):
     content = content.replace('\u200B', '')  # Zero Width Space
     content = content.replace('\u00A0', ' ') # Non-breaking space
     
+    # Inject array package if tabular with >{} definitions is used
+    if r'\begin{tabular}' in content and r'\usepackage{array}' not in content:
+        content = content.replace(r'\begin{document}', r'\usepackage{array}' + '\n' + r'\begin{document}')
+        
     if content.startswith('```'):
         # Find first newline
         first_newline = content.find('\n')
