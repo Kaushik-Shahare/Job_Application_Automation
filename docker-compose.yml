@@ -6,6 +6,9 @@ services:
     environment:
       - GENERIC_TIMEZONE=Asia/Kolkata
       - TZ=Asia/Kolkata
+      - N8N_HOST=n8n.kaushikshahare.com
+      - N8N_PROTOCOL=https
+      - WEBHOOK_URL=https://n8n.kaushikshahare.com
     volumes:
       - ./n8n_data:/home/node/.n8n
       - ./latex:/latex
