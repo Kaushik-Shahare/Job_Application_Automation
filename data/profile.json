@@ -1,0 +1,151 @@
+{
+  "name": "Kaushik Shahare",
+  "phone": "+91-9359139756",
+  "email": "kaushikshahare4@gmail.com",
+  "github": "https://github.com/Kaushik-Shahare",
+  "linkedin": "https://linkedin.com/in/kaushik-shahare-84bba7267/",
+  "portfolio": "https://kaushikshahare.com",
+  "location": "Mumbai, Maharashtra, India",
+
+  "target_roles": [
+    "Software Engineer",
+    "Software Developer",
+    "Backend Developer",
+    "Backend Engineer",
+    "Full Stack Developer",
+    "SDE",
+    "SDE-1",
+    "Python Developer",
+    "Django Developer",
+    "Node.js Developer",
+    "Platform Engineer",
+    "DevOps Engineer"
+  ],
+
+  "target_locations": [
+    "Mumbai",
+    "Navi Mumbai",
+    "Pune",
+    "Bangalore",
+    "Bengaluru",
+    "Hyderabad",
+    "Remote",
+    "India"
+  ],
+
+  "preferred_employment_types": ["Full-time", "Internship"],
+
+  "experience_level": "Entry level",
+  "total_experience_years": 1.5,
+
+  "skills": {
+    "languages": ["Python", "C/C++", "JavaScript"],
+    "backend_frameworks": ["Django", "FastAPI", "Node.js", "Express.js"],
+    "apis": ["REST APIs", "WebSockets", "gRPC"],
+    "distributed_systems": ["Celery", "Kafka", "Redis", "Event-driven pipelines", "Async processing"],
+    "databases": ["PostgreSQL", "MySQL", "MongoDB"],
+    "cloud_devops": ["Azure", "Docker", "CI/CD"],
+    "concepts": [
+      "System Design", "Design Patterns",
+      "Indexing", "Query Optimization", "Partitioning", "Sharding",
+      "HTTP/1.1", "HTTP/2", "HTTP/3",
+      "Short Polling", "Long Polling", "WebSockets",
+      "TCP/IP", "TLS",
+      "Data Structures", "Algorithms", "Operating Systems", "OOP"
+    ]
+  },
+
+  "must_have_keywords": [
+    "Python", "Django", "FastAPI", "Node.js", "JavaScript",
+    "Backend", "REST API", "PostgreSQL", "Docker",
+    "Software Engineer", "Software Developer", "SDE",
+    "Full Stack", "Celery", "Redis", "Kafka",
+    "System Design", "Microservices"
+  ],
+
+  "reject_keywords": [
+    "10+ years", "15+ years",
+    "Staff Engineer", "Principal Engineer",
+    "Director", "VP",
+    "SAP", "Salesforce", "BlueYonder",
+    "iOS Developer", "Android Developer",
+    "Embedded Systems", "VLSI", "FPGA",
+    "Data Entry", "Manual Testing"
+  ],
+
+  "experience": [
+    {
+      "title": "Software Engineer Intern (Backend)",
+      "company": "Storyvord",
+      "type": "SaaS startup ($197K ARR)",
+      "location": "London, UK (Remote)",
+      "dates": "Jul 2024 – Oct 2025",
+      "highlights": [
+        "Built and scaled backend services using Django and PostgreSQL for production workloads",
+        "Implemented distributed async pipelines with Celery + Redis, improving task reliability by 20%",
+        "Optimized SQL queries, indexing strategies, caching, and APIs, reducing latency by up to 40%",
+        "Designed backend services with fault tolerance, retries, and graceful degradation",
+        "Worked on Azure + Docker deployments, improving service availability",
+        "Promoted to SDE Intern based on consistent impact"
+      ]
+    },
+    {
+      "title": "Backend Developer Intern",
+      "company": "Mr. Loggage",
+      "location": "Vadodara, India",
+      "dates": "Jul 2024 – Sep 2024",
+      "highlights": [
+        "Developed RESTful APIs using Express.js, reducing integration issues by 25%",
+        "Improved debugging efficiency through structured logging with Winston and Morgan",
+        "Collaborated in cross-functional teams using Git-based workflows"
+      ]
+    }
+  ],
+
+  "projects": [
+    {
+      "name": "VidPipeline",
+      "github": "https://github.com/Kaushik-Shahare/VidPipeline",
+      "year": "2025",
+      "subtitle": "Distributed Video Processing Backend",
+      "tech": "FastAPI, Kafka, Celery, PostgreSQL",
+      "highlights": [
+        "Built a distributed video-processing pipeline handling large uploads via async workflows",
+        "Designed event-driven architecture using Kafka for transcoding and metadata extraction",
+        "Implemented fault-tolerant background workers with retries and concurrency controls"
+      ]
+    },
+    {
+      "name": "MedAudit",
+      "github": "https://github.com/Kaushik-Shahare/MedAudit",
+      "year": "2025",
+      "subtitle": "Healthcare Automation Platform",
+      "tech": "Django, PostgreSQL, LangGraph",
+      "highlights": [
+        "Led backend development for a multi-agent system automating healthcare workflows",
+        "Built an insurance claim validation pipeline focusing on data integrity and auditability",
+        "Designed the system to reduce manual healthcare evaluation overhead"
+      ]
+    }
+  ],
+
+  "education": {
+    "institution": "Parul Institute of Technology",
+    "degree": "B.Tech in Computer Science and Engineering",
+    "gpa": "8.21 / 10",
+    "dates": "Aug 2022 – Jun 2026",
+    "location": "Vadodara, Gujarat",
+    "coursework": [
+      "Data Structures and Algorithms",
+      "Operating Systems",
+      "Database Systems",
+      "Distributed Systems",
+      "Cloud Computing"
+    ]
+  },
+
+  "achievements": [
+    "Winner — Code Crafters, flagship college-level DSA competition with 800+ participants",
+    "2nd Runner-Up — National-level Healthcare Hackathon by myOnsite Healthcare (150+ teams)"
+  ]
+}

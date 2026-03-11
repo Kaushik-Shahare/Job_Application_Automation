@@ -1,0 +1,59 @@
+{
+  "application_settings": {
+    "resume_path": "latex/sent/Kaushik-Shahare.pdf",
+    "job_queue_path": "data/job_queue.json",
+    "profile_path": "data/profile.json",
+    "rate_limit": {
+      "applications_per_hour": 5,
+      "delay_between_applications_seconds": 720,
+      "max_applications_per_session": 25
+    }
+  },
+
+  "form_field_mappings": {
+    "full_name": "Kaushik Shahare",
+    "email": "kaushikshahare4@gmail.com",
+    "phone": "+91-9359139756",
+    "linkedin": "https://linkedin.com/in/kaushik-shahare-84bba7267/",
+    "github": "https://github.com/Kaushik-Shahare",
+    "portfolio": "https://kaushikshahare.com",
+    "location": "Mumbai, Maharashtra, India",
+    "years_of_experience": "1",
+    "education": "B.Tech Computer Science",
+    "university": "Parul Institute of Technology",
+    "graduation_year": "2026",
+    "gpa": "8.21",
+    "work_authorization": "Indian Citizen",
+    "requires_sponsorship": "No",
+    "salary_expectation": "Negotiable",
+    "available_start_date": "Immediately",
+    "willing_to_relocate": "Yes"
+  },
+
+  "easy_apply_settings": {
+    "auto_submit": false,
+    "answer_questions": true,
+    "default_answers": {
+      "are_you_legally_authorized": "Yes",
+      "will_you_now_or_in_the_future_require_sponsorship": "No",
+      "how_many_years_of_work_experience": "1",
+      "what_is_your_expected_salary": "",
+      "are_you_willing_to_relocate": "Yes"
+    }
+  },
+
+  "external_apply_settings": {
+    "upload_resume": true,
+    "fill_form_fields": true,
+    "auto_submit": false,
+    "screenshot_before_submit": true
+  },
+
+  "scheduling": {
+    "enabled": false,
+    "start_time": "23:00",
+    "end_time": "06:00",
+    "timezone": "Asia/Kolkata",
+    "days": ["monday", "tuesday", "wednesday", "thursday", "friday"]
+  }
+}

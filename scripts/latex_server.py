@@ -1,0 +1,114 @@
+from flask import Flask, request, jsonify
+import subprocess
+import os
+import re
+
+app = Flask(__name__)
+
+def clean_latex_content(content):
+    """Remove markdown fences if the LLM included them."""
+    content = content.strip()
+    if content.startswith('```'):
+        # Find first newline
+        first_newline = content.find('\n')
+        if first_newline != -1:
+            content = content[first_newline+1:]
+        if content.endswith('```'):
+            content = content[:-3]
+    return content.strip()
+
+@app.route('/build-resume', methods=['POST'])
+def build_resume():
+    data = request.json
+    if not data:
+        return jsonify({'error': 'No JSON payload provided'}), 400
+        
+    resume_code = data.get('resume_code', 'resume')
+    latex_content = data.get('latex_content', '')
+    
+    if not latex_content:
+        return jsonify({'error': 'latex_content is required'}), 400
+        
+    latex_content = clean_latex_content(latex_content)
+    
+    working_dir = '/data/generated'
+    os.makedirs(working_dir, exist_ok=True)
+    
+    filename = f"{resume_code}.tex"
+    filepath = os.path.join(working_dir, filename)
+    pdf_path = os.path.join(working_dir, f"{resume_code}.pdf")
+    
+    # Write .tex file
+    with open(filepath, 'w', encoding='utf-8') as f:
+        f.write(latex_content)
+        
+    # Run pdflatex (up to 3 times to resolve references and handle transient errors)
+    success = False
+    error_output = ""
+    attempt = 0
+    
+    for attempt in range(1, 4):
+        try:
+            result = subprocess.run(
+                ['pdflatex', '-interaction=nonstopmode', '-halt-on-error', filename],
+                cwd=working_dir,
+                capture_output=True,
+                text=True,
+                timeout=45
+            )
+            
+            if result.returncode == 0:
+                success = True
+                # Run one more time for references if successful
+                subprocess.run(
+                    ['pdflatex', '-interaction=nonstopmode', filename], 
+                    cwd=working_dir, 
+                    capture_output=True,
+                    timeout=45
+                )
+                break
+                
+            # If it failed, capture error and maybe apply simple auto-fixes
+            error_output = result.stdout
+            
+            # Simple auto-fix: escape common problematic unescaped characters
+            if attempt < 3:
+                # Look for unescaped &, %, #
+                fixed_content = re.sub(r'(?<!\\)&(?!amp;)', r'\\&', latex_content)
+                fixed_content = re.sub(r'(?<!\\)%', r'\\%', fixed_content)
+                fixed_content = re.sub(r'(?<!\\)#', r'\\#', fixed_content)
+                
+                if fixed_content != latex_content:
+                    latex_content = fixed_content
+                    with open(filepath, 'w', encoding='utf-8') as f:
+                        f.write(latex_content)
+                        
+        except Exception as e:
+            error_output = str(e)
+            
+    # Check if PDF actually exists
+    pdf_exists = os.path.exists(pdf_path)
+    
+    if success and pdf_exists:
+        return jsonify({
+            'status': 'success',
+            'resume_status': 'compiled',
+            'pdf_path': f"/latex/generated/{resume_code}.pdf",
+            'tex_path': f"/latex/generated/{resume_code}.tex",
+            'compile_attempts': attempt
+        })
+    else:
+        # Extract meaningful errors
+        lines = error_output.split('\n')
+        errors = [l for l in lines if l.startswith('!') or 'Error' in l or 'Undefined control sequence' in l or 'Missing' in l]
+        short_error = '\n'.join(errors[:20]) if errors else error_output[-500:]
+        
+        return jsonify({
+            'status': 'error',
+            'resume_status': 'compilation_failed',
+            'error_details': short_error,
+            'compile_attempts': attempt
+        }), 500
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)

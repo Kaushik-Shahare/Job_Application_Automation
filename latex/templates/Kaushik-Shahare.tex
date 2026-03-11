@@ -1,0 +1,151 @@
+\documentclass[letterpaper,11pt]{article}
+
+\usepackage{latexsym}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+
+\addtolength{\oddsidemargin}{-0.6in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1.19in}
+\addtolength{\topmargin}{-0.7in}
+\addtolength{\textheight}{1.4in}
+
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+\titleformat{\section}
+{\vspace{-4pt}\scshape\large\bfseries}
+{}
+{0em}
+{}
+[\color{black}\titlerule \vspace{-5pt}]
+
+\newcommand{\resumeItem}[1]{\item\small{{#1 \vspace{-2pt}}}}
+\newcommand{\resumeSubheading}[4]{
+\item
+\begin{tabular*}{1.0\textwidth}{l@{\extracolsep{\fill}}r}
+\textbf{#1} & \textbf{\small #2} \\
+\textit{\small #3} & \textit{\small #4}
+\end{tabular*}\vspace{-6pt}
+}
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0in,label={}]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
+
+\begin{document}
+
+% ---------- HEADER ----------
+\begin{center}
+{\Huge \scshape Kaushik Shahare} \\ \vspace{2pt}
+\small
++91-9359139756 $|$
+\href{mailto:kaushikshahare4@gmail.com}{kaushikshahare4@gmail.com} $|$
+\href{https://github.com/Kaushik-Shahare}{github.com/Kaushik-Shahare} $|$
+\href{https://linkedin.com/in/kaushik-shahare-84bba7267/}{linkedin.com/in/kaushik-shahare} $|$
+\href{https://kaushikshahare.com}{kaushikshahare.com} \\
+Mumbai, Maharashtra, India
+\end{center}
+
+
+% ---------- EXPERIENCE ----------
+\section{Experience}
+\resumeSubHeadingListStart
+
+\resumeSubheading
+{Software Engineer Intern (Backend)}{Jul 2024 -- Oct 2025}
+{Storyvord — Revenue-generating SaaS startup (\$197K ARR)}{London, UK (Remote)}
+\resumeItemListStart
+\resumeItem{Built and scaled backend services using Django and PostgreSQL for production workloads.}
+\resumeItem{Implemented \textbf{distributed async pipelines} with \textbf{Celery + Redis}, improving task reliability by \textbf{20\%}.}
+\resumeItem{Optimized \textbf{SQL queries, indexing strategies, caching, and APIs}, reducing end-to-end latency by up to \textbf{40\%}.}
+\resumeItem{Designed backend services with fault tolerance, retries, and graceful degradation for async and background workloads.}
+\resumeItem{Worked on \textbf{Azure + Docker deployments}, improving service availability and backend scalability.}
+\resumeItem{Promoted to \textbf{SDE Intern} based on consistent impact across backend architecture and system reliability.}
+\resumeItemListEnd
+
+\resumeSubheading
+{Backend Developer Intern}{Jul 2024 -- Sep 2024}
+{Mr. Loggage}{Vadodara, India}
+\resumeItemListStart
+\resumeItem{Developed \textbf{RESTful APIs} using \textbf{Express.js}, reducing integration issues by \textbf{25\%}.}
+\resumeItem{Improved debugging efficiency through \textbf{structured logging} with Winston and Morgan.}
+\resumeItem{Collaborated in \textbf{cross-functional teams} using Git-based workflows and version-controlled releases.}
+\resumeItemListEnd
+
+\resumeSubHeadingListEnd
+
+% ---------- PROJECTS ----------
+\section{Projects}
+\resumeSubHeadingListStart
+
+\resumeSubheading
+{VidPipeline \; (\href{https://github.com/Kaushik-Shahare/VidPipeline}{GitHub})}{2025}
+{Distributed Video Processing Backend}{FastAPI, Kafka, Celery, PostgreSQL}
+\resumeItemListStart
+\resumeItem{Built a \textbf{distributed video-processing pipeline} handling large uploads via asynchronous, multi-stage workflows.}
+\resumeItem{Designed \textbf{event-driven architecture} using Kafka for transcoding and metadata extraction.}
+\resumeItem{Implemented \textbf{fault-tolerant background workers} with retries and concurrency controls.}
+\resumeItemListEnd
+
+\resumeSubheading
+{MedAudit \; (\href{https://github.com/Kaushik-Shahare/MedAudit}{GitHub})}{2025}
+{Healthcare Automation Platform}{Django, PostgreSQL, LangGraph}
+\resumeItemListStart
+\resumeItem{Led backend development for a \textbf{multi-agent system} automating healthcare and insurance workflows.}
+\resumeItem{Built an \textbf{insurance claim validation pipeline} focusing on data integrity and auditability.}
+\resumeItem{Designed the system to \textbf{reduce manual healthcare evaluation overhead} via automated checks.}
+\resumeItemListEnd
+
+\resumeSubHeadingListEnd
+
+% ---------- EDUCATION ----------
+\section{Education}
+\resumeSubHeadingListStart
+\resumeSubheading
+{Parul Institute of Technology}{Aug 2022 -- Jun 2026}
+{B.Tech in Computer Science and Engineering \textbar\ GPA: 8.21 / 10}{Vadodara, Gujarat}
+\resumeSubHeadingListEnd
+
+\small{
+\textbf{Relevant Coursework:} Data Structures and Algorithms, Operating Systems, Database Systems, Distributed Systems, Cloud Computing
+}
+
+% ---------- SKILLS ----------
+\section{Technical Skills}
+\small{
+\textbf{Languages:} Python, C/C++, JavaScript \\
+\textbf{Backend \& APIs:} Django, FastAPI, Node.js, REST APIs, WebSockets, gRPC \\
+\textbf{Distributed Systems:} Celery, Kafka, Redis, Event-driven pipelines, Async processing \\
+\textbf{Databases:} PostgreSQL, MySQL, MongoDB \\
+\textbf{Cloud \& DevOps:} Azure (VMs, Blob, App Service), Docker, CI/CD \\
+
+\textbf{Backend \& Systems:}
+Indexing, query optimization, partitioning, sharding;
+system design, design patterns;
+HTTP/1.1, HTTP/2, HTTP/3;
+short polling, long polling, WebSockets;
+TCP/IP, TLS \\
+
+\textbf{Core CS:} Data Structures, Algorithms, Operating Systems, OOP
+}
+
+
+% ---------- ACHIEVEMENTS ----------
+\section{Achievements}
+\resumeSubHeadingListStart
+\item \small{\textbf{Winner} — Code Crafters, flagship college-level \textbf{DSA competition} with \textbf{800+ participants}.}
+\item \small{\textbf{2nd Runner-Up} — National-level \textbf{Healthcare Hackathon} conducted by \textbf{myOnsite Healthcare} (150+ teams), evaluated on technical depth, feasibility, and real-world healthcare impact.}
+\resumeSubHeadingListEnd
+
+\end{document}
