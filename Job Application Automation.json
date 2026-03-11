@@ -94,7 +94,7 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "=Analyze this job listing and determine if it's a good fit for the candidate.\n\n## Job Details\n- Title: {{ $json.title }}\n- Company: {{ $json.companyName || $json.company }}\n- Location: {{ $json.location }}\n- Seniority: {{ $json.seniorityLevel }}\n- Employment Type: {{ $json.employmentType }}\n- Industry: {{ $json.industries }}\n- Job Function: {{ $json.jobFunction }}\n\n## Job Description\n{{ $json.descriptionText }}\n\n## Candidate Profile\nKaushik Shahare — B.Tech CS student (graduating Jun 2026), 1.5 years backend experience.\nSkills: Python, Django, FastAPI, Node.js, Express.js, PostgreSQL, MongoDB, Redis, Celery, Kafka, Docker, Azure.\nExperience: Backend/SDE intern at revenue-generating SaaS startup (Storyvord), built distributed async pipelines, optimized SQL queries.\nProjects: Distributed video processing (FastAPI+Kafka), Healthcare automation (Django+LangGraph).\nLooking for: SDE, Backend Developer, Full Stack, Python Developer roles. Entry-level/intern. Locations: Mumbai, Pune, Bangalore, Hyderabad, Remote India.\n\nReject if: requires 5+ years experience, requires niche/irrelevant tech (SAP, Salesforce, BlueYonder, VLSI, Embedded, iOS/Android native), is data entry or manual testing.\n\n## Instructions\nRespond ONLY with valid JSON (no markdown, no code fences):\n{\n  \"score\": <1-10>,\n  \"fit\": <true if score >= 6>,\n  \"reasoning\": \"<2-3 sentence explanation>\",\n  \"recommended_resume_focus\": \"<comma-separated keywords to emphasize in resume>\",\n  \"category\": \"<STRONG_FIT | MODERATE_FIT | WEAK_FIT | NO_FIT>\"\n}",
+        "text": "=Analyze this job listing and determine if it's a good fit for the candidate.\n\n## Job Details\n- Title: {{ $json.title }}\n- Company: {{ $json.companyName || $json.company }}\n- Location: {{ $json.location }}\n- Seniority: {{ $json.seniorityLevel }}\n- Employment Type: {{ $json.employmentType }}\n- Industry: {{ $json.industries }}\n- Job Function: {{ $json.jobFunction }}\n\n## Job Description\n{{ $json.descriptionText }}\n\n## Candidate Profile\n{{ $('Read Profile').item.json.profile }}\n\n## Instructions\nRespond ONLY with valid JSON (no markdown, no code fences):\n{\n  \"score\": <1-10>,\n  \"fit\": <true if score >= 6>,\n  \"reasoning\": \"<2-3 sentence explanation>\",\n  \"recommended_resume_focus\": \"<comma-separated keywords to emphasize in resume>\",\n  \"category\": \"<STRONG_FIT | MODERATE_FIT | WEAK_FIT | NO_FIT>\"\n}",
         "options": {
           "systemMessage": "You are a job-fit evaluation AI. You analyze job descriptions against a candidate's profile and return structured JSON assessments. Be strict but fair — a score of 6+ means the candidate could realistically get an interview. Consider skill overlap, experience level requirements, location match, and tech stack alignment. Always respond with valid JSON only, no markdown formatting."
         }
@@ -287,7 +287,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Store resume in index and prepare for sending\nconst fs = require('fs');\n\nconst output = [];\n\nfor (const item of items) {\n  const job = item.json;\n  \n  // Load current index\n  let index = [];\n  try {\n    const raw = fs.readFileSync('/metadata/resume_index.json', 'utf8');\n    index = JSON.parse(raw);\n    if (!Array.isArray(index)) index = [index];\n  } catch(e) {\n    index = [];\n  }\n  \n  // Create record\n  const record = {\n    code: job.resume_code,\n    title_code: job.title_code,\n    location_code: job.location_code,\n    job_title: job.title,\n    location: job.location,\n    company: job.company,\n    ai_score: job.ai_score,\n    ai_category: job.ai_category,\n    is_easy_apply: job.is_easy_apply,\n    apply_url: job.is_easy_apply ? job.linkedin_url : job.apply_url,\n    timestamp: new Date().toISOString(),\n    pdf: `generated/${job.resume_code}.pdf`,\n    status: 'generated'\n  };\n  \n  index.push(record);\n  \n  // Save index\n  try {\n    fs.writeFileSync('/metadata/resume_index.json', JSON.stringify(index, null, 2), 'utf8');\n  } catch(e) {\n    // If /metadata mount fails, try relative\n    try {\n      fs.writeFileSync('/data/../metadata/resume_index.json', JSON.stringify(index, null, 2), 'utf8');\n    } catch(e2) {}\n  }\n  \n  // Copy PDF to sent/ as Kaushik-Shahare.pdf\n  try {\n    const src = `/data/generated/${job.resume_code}.pdf`;\n    const dst = `/data/sent/Kaushik-Shahare.pdf`;\n    const dstCopy = `/data/sent/${job.resume_code}.pdf`;\n    if (fs.existsSync(src)) {\n      fs.copyFileSync(src, dst);\n      fs.copyFileSync(src, dstCopy);\n      record.status = 'ready_to_send';\n    }\n  } catch(e) {}\n  \n  output.push({\n    json: {\n      ...job,\n      resume_record: record,\n      final_pdf: `sent/Kaushik-Shahare.pdf`,\n      archived_pdf: `generated/${job.resume_code}.pdf`\n    }\n  });\n}\n\nreturn output;"
+        "jsCode": "// Store resume in index and prepare for sending\nconst fs = require('fs');\n\nconst output = [];\n\nfor (const item of items) {\n  const job = item.json;\n  \n  // Load current index\n  let index = [];\n  try {\n    const raw = fs.readFileSync('/metadata/resume_index.json', 'utf8');\n    index = JSON.parse(raw);\n    if (!Array.isArray(index)) index = [index];\n  } catch(e) {\n    index = [];\n  }\n  \n  // Create record\n  const record = {\n    code: job.resume_code,\n    title_code: job.title_code,\n    location_code: job.location_code,\n    job_title: job.title,\n    location: job.location,\n    company: job.company,\n    ai_score: job.ai_score,\n    ai_category: job.ai_category,\n    is_easy_apply: job.is_easy_apply,\n    apply_url: job.is_easy_apply ? job.linkedin_url : job.apply_url,\n    timestamp: new Date().toISOString(),\n    pdf: `generated/${job.resume_code}.pdf`,\n    status: 'generated'\n  };\n  \n  index.push(record);\n  \n  // Save index\n  try {\n    fs.writeFileSync('/metadata/resume_index.json', JSON.stringify(index, null, 2), 'utf8');\n  } catch(e) {\n    // If /metadata mount fails, try relative\n    try {\n      fs.writeFileSync('/data/../metadata/resume_index.json', JSON.stringify(index, null, 2), 'utf8');\n    } catch(e2) {}\n  }\n  \n  // Copy PDF to sent/ as Kaushik-Shahare.pdf\n  try {\n    const src = `/latex/generated/${job.resume_code}.pdf`;\n    if (!fs.existsSync('/data/sent')) { fs.mkdirSync('/data/sent', { recursive: true }); }\n    const dst = `/data/sent/Kaushik-Shahare.pdf`;\n    const dstCopy = `/data/sent/${job.resume_code}.pdf`;\n    if (fs.existsSync(src)) {\n      fs.copyFileSync(src, dst);\n      fs.copyFileSync(src, dstCopy);\n      record.status = 'ready_to_send';\n    }\n  } catch(e) {}\n  \n  output.push({\n    json: {\n      ...job,\n      resume_record: record,\n      final_pdf: `sent/Kaushik-Shahare.pdf`,\n      archived_pdf: `generated/${job.resume_code}.pdf`\n    }\n  });\n}\n\nreturn output;"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -346,7 +346,7 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "=Generate a complete, compilable LaTeX resume for the following job application.\n\n## Target Job\n- Title: {{ $json.title }}\n- Company: {{ $json.company }}\n- Location: {{ $json.location }}\n- Key Skills/Keywords to Emphasize: {{ $json.ai_resume_focus }}\n\n## Job Description\n{{ $json.descriptionText }}\n\n## Candidate Profile\nKaushik Shahare — B.Tech CS student (graduating Jun 2026), 1.5 years backend experience.\nSkills: Python, Django, FastAPI, Node.js, Express.js, PostgreSQL, MongoDB, Redis, Celery, Kafka, Docker, Azure.\nExperience: Backend/SDE intern at revenue-generating SaaS startup (Storyvord), built distributed async pipelines, optimized SQL queries, real-time WebSocket features.\nProjects: Distributed video processing (FastAPI+Kafka), Healthcare automation (Django+LangGraph), Portfolio website.\nEducation: B.Tech in Computer Science from MIT WPU, Pune (2022-2026).\nLinks: GitHub: github.com/KaushikShahare, LinkedIn: linkedin.com/in/kaushik-shahare, Portfolio: kaushikshahare.me\n\nGenerate the complete LaTeX .tex file content now. Output ONLY the LaTeX code, starting with \\documentclass and ending with \\end{document}. No explanations, no markdown.",
+        "text": "=Generate a complete, compilable LaTeX resume for the following job application.\n\n## Target Job\n- Title: {{ $json.title }}\n- Company: {{ $json.company }}\n- Location: {{ $json.location }}\n- Key Skills/Keywords to Emphasize: {{ $json.ai_resume_focus }}\n\n## Job Description\n{{ $json.descriptionText }}\n\n## Candidate Profile\n{{ $('Read Profile').item.json.profile }}\n\nGenerate the complete LaTeX .tex file content now. Output ONLY the LaTeX code, starting with \\documentclass and ending with \\end{document}. No explanations, no markdown.",
         "options": {
           "systemMessage": "You are an expert LaTeX resume writer. You generate ATS-optimized, single-page resumes in LaTeX format.\nRules:\n- Output ONLY valid, compilable LaTeX code. No markdown, no explanations, no code fences.\n- Use standard LaTeX packages only (geometry, enumitem, hyperref, titlesec, fancyhdr). Do NOT use custom cls files.\n- The resume must be tailored to the specific job description and keywords provided.\n- Emphasize skills and experiences that match the job requirements.\n- Keep it to exactly one page.\n- Use professional formatting with clear sections: Header (name, email, phone, links), Education, Experience, Projects, Technical Skills.\n- Include quantified achievements where possible.\n- The candidate name is Kaushik Shahare.\n- If you receive a LaTeX compilation error, fix the error and return the COMPLETE corrected LaTeX file.\n- Common errors: unescaped special chars (& % $ # _ { } ~ ^), missing packages, undefined commands."
         }
@@ -359,6 +359,19 @@
       ],
       "id": "f976b21a-d0ad-4b04-973a-fd9cc1c814ce",
       "name": "Resume Builder Agent"
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst fs = require('fs');\nlet profileStr = '';\ntry {\n  const raw = fs.readFileSync('/data/profile.json', 'utf8');\n  const p = JSON.parse(raw);\n  \n  // Format profile nicely\n  profileStr = `${p.name} — ${p.experience_level}\\nSkills: ${Object.values(p.skills).flat().join(', ')}\\nExperience Options:`;\n\n  for (const exp of p.experience) {\n    profileStr += `\\n- ${exp.title} at ${exp.company} (${exp.dates}): ${exp.highlights[0]}`;\n  }\n  \n  profileStr += `\\nProjects: ${p.projects.map(pr => pr.name + ' (' + pr.tech + ')').join(', ')}`;\n  profileStr += `\\nTarget roles: ${p.target_roles.join(', ')}`;\n  profileStr += `\\nReject keywords: ${p.reject_keywords.join(', ')}`;\n  profileStr += `\\nTarget keywords: ${p.must_have_keywords.join(', ')}`;\n  \n} catch (e) {\n  profileStr = \"Candidate: Kaushik Shahare. Role: SDE. Skills: Python, Node.js, Azure\";\n}\n\nreturn [{ json: { profile: profileStr, raw_json: profileStr } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2176,
+        450
+      ],
+      "id": "read-profile-8rasg",
+      "name": "Read Profile"
     }
   ],
   "pinData": {
@@ -4486,6 +4499,11 @@
         [
           {
             "node": "Linkedin Jobs URL",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Read Profile",
             "type": "main",
             "index": 0
           }
