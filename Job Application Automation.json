@@ -94,7 +94,7 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "=Analyze this job listing and determine if it's a good fit for the candidate.\n\n## Job Details\n- Title: {{ $json.title }}\n- Company: {{ $json.companyName || $json.company }}\n- Location: {{ $json.location }}\n- Seniority: {{ $json.seniorityLevel }}\n- Employment Type: {{ $json.employmentType }}\n- Industry: {{ $json.industries }}\n- Job Function: {{ $json.jobFunction }}\n\n## Job Description\n{{ $json.descriptionText }}\n\n## Candidate Profile\n{{ $('Read Profile').item.json.profile }}\n\n## Instructions\nRespond ONLY with valid JSON (no markdown, no code fences):\n{\n  \"score\": <1-10>,\n  \"fit\": <true if score >= 6>,\n  \"reasoning\": \"<2-3 sentence explanation>\",\n  \"recommended_resume_focus\": \"<comma-separated keywords to emphasize in resume>\",\n  \"category\": \"<STRONG_FIT | MODERATE_FIT | WEAK_FIT | NO_FIT>\"\n}",
+        "text": "=Analyze this job listing and determine if it's a good fit for the candidate.\n\n## Job Details\n- Title: {{ $json.title }}\n- Company: {{ $json.companyName || $json.company }}\n- Location: {{ $json.location }}\n- Seniority: {{ $json.seniorityLevel }}\n- Employment Type: {{ $json.employmentType }}\n- Industry: {{ $json.industries }}\n- Job Function: {{ $json.jobFunction }}\n\n## Job Description\n{{ $json.descriptionText }}\n\n## Candidate Profile\n{{ $('Candidate Context').item.json.profile }}\n\n## Instructions\nRespond ONLY with valid JSON (no markdown, no code fences):\n{\n  \"score\": <1-10>,\n  \"fit\": <true if score >= 6>,\n  \"reasoning\": \"<2-3 sentence explanation>\",\n  \"recommended_resume_focus\": \"<comma-separated keywords to emphasize in resume>\",\n  \"category\": \"<STRONG_FIT | MODERATE_FIT | WEAK_FIT | NO_FIT>\"\n}",
         "options": {
           "systemMessage": "You are a job-fit evaluation AI. You analyze job descriptions against a candidate's profile and return structured JSON assessments. Be strict but fair — a score of 6+ means the candidate could realistically get an interview. Consider skill overlap, experience level requirements, location match, and tech stack alignment. Always respond with valid JSON only, no markdown formatting."
         }
@@ -245,7 +245,7 @@
           "parameters": [
             {
               "name": "resume_code",
-              "value": "={{ $json.resume_code || 'resume' }}"
+              "value": "={{ $('Find Old Resume').item.json.resume_code }}"
             },
             {
               "name": "latex_content",
@@ -346,7 +346,7 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "=Generate a complete, compilable LaTeX resume for the following job application.\n\n## Target Job\n- Title: {{ $json.title }}\n- Company: {{ $json.company }}\n- Location: {{ $json.location }}\n- Key Skills/Keywords to Emphasize: {{ $json.ai_resume_focus }}\n\n## Job Description\n{{ $json.descriptionText }}\n\n## Candidate Profile\n{{ $('Read Profile').item.json.profile }}\n\nGenerate the complete LaTeX .tex file content now. Output ONLY the LaTeX code, starting with \\documentclass and ending with \\end{document}. No explanations, no markdown.",
+        "text": "=Generate a complete, compilable LaTeX resume for the following job application.\n\n## Target Job\n- Title: {{ $json.title }}\n- Company: {{ $json.company }}\n- Location: {{ $json.location }}\n- Key Skills/Keywords to Emphasize: {{ $json.ai_resume_focus }}\n\n## Job Description\n{{ $json.descriptionText }}\n\n## Candidate Profile\n{{ $('Candidate Context').item.json.profile }}\n\n{{ $json.has_old_resume ? '## Previous Resume\\nUse this previous resume as a reference for structure and content:\\n' + $json.old_resume_content : '' }}\n\nGenerate the complete LaTeX .tex file content now. Output ONLY the LaTeX code, starting with \\documentclass and ending with \\end{document}. No explanations, no markdown.",
         "options": {
           "systemMessage": "You are an expert LaTeX resume writer. You generate ATS-optimized, single-page resumes in LaTeX format.\nRules:\n- Output ONLY valid, compilable LaTeX code. No markdown, no explanations, no code fences.\n- Use standard LaTeX packages only (geometry, enumitem, hyperref, titlesec, fancyhdr). Do NOT use custom cls files.\n- The resume must be tailored to the specific job description and keywords provided.\n- Emphasize skills and experiences that match the job requirements.\n- Keep it to exactly one page.\n- Use professional formatting with clear sections: Header (name, email, phone, links), Education, Experience, Projects, Technical Skills.\n- Include quantified achievements where possible.\n- The candidate name is Kaushik Shahare.\n- If you receive a LaTeX compilation error, fix the error and return the COMPLETE corrected LaTeX file.\n- Common errors: unescaped special chars (& % $ # _ { } ~ ^), missing packages, undefined commands."
         }
@@ -362,16 +362,54 @@
     },
     {
       "parameters": {
-        "jsCode": "\nconst fs = require('fs');\nlet profileStr = '';\ntry {\n  const raw = fs.readFileSync('/data/profile.json', 'utf8');\n  const p = JSON.parse(raw);\n  \n  // Format profile nicely\n  profileStr = `${p.name} — ${p.experience_level}\\nSkills: ${Object.values(p.skills).flat().join(', ')}\\nExperience Options:`;\n\n  for (const exp of p.experience) {\n    profileStr += `\\n- ${exp.title} at ${exp.company} (${exp.dates}): ${exp.highlights[0]}`;\n  }\n  \n  profileStr += `\\nProjects: ${p.projects.map(pr => pr.name + ' (' + pr.tech + ')').join(', ')}`;\n  profileStr += `\\nTarget roles: ${p.target_roles.join(', ')}`;\n  profileStr += `\\nReject keywords: ${p.reject_keywords.join(', ')}`;\n  profileStr += `\\nTarget keywords: ${p.must_have_keywords.join(', ')}`;\n  \n} catch (e) {\n  profileStr = \"Candidate: Kaushik Shahare. Role: SDE. Skills: Python, Node.js, Azure\";\n}\n\nreturn [{ json: { profile: profileStr, raw_json: profileStr } }];\n"
+        "assignments": {
+          "assignments": [
+            {
+              "id": "profile-string",
+              "name": "profile",
+              "value": "{\n  \"name\": \"Kaushik Shahare\",\n  \"phone\": \"+91-9359139756\",\n  \"email\": \"kaushikshahare4@gmail.com\",\n  \"github\": \"https://github.com/Kaushik-Shahare\",\n  \"linkedin\": \"https://linkedin.com/in/kaushik-shahare-84bba7267/\",\n  \"portfolio\": \"https://kaushikshahare.com\",\n  \"location\": \"Mumbai, Maharashtra, India\",\n  \"target_roles\": [\n    \"Software Engineer\",\n    \"Software Developer\",\n    \"Backend Developer\",\n    \"Backend Engineer\",\n    \"Full Stack Developer\",\n    \"SDE\",\n    \"SDE-1\",\n    \"Python Developer\",\n    \"Django Developer\",\n    \"Node.js Developer\",\n    \"Platform Engineer\",\n    \"DevOps Engineer\"\n  ],\n  \"target_locations\": [\n    \"Mumbai\",\n    \"Navi Mumbai\",\n    \"Pune\",\n    \"Bangalore\",\n    \"Bengaluru\",\n    \"Hyderabad\",\n    \"Remote\",\n    \"India\"\n  ],\n  \"preferred_employment_types\": [\n    \"Full-time\",\n    \"Internship\"\n  ],\n  \"experience_level\": \"Entry level\",\n  \"total_experience_years\": 1.5,\n  \"skills\": {\n    \"languages\": [\n      \"Python\",\n      \"C/C++\",\n      \"JavaScript\"\n    ],\n    \"backend_frameworks\": [\n      \"Django\",\n      \"FastAPI\",\n      \"Node.js\",\n      \"Express.js\"\n    ],\n    \"apis\": [\n      \"REST APIs\",\n      \"WebSockets\",\n      \"gRPC\"\n    ],\n    \"distributed_systems\": [\n      \"Celery\",\n      \"Kafka\",\n      \"Redis\",\n      \"Event-driven pipelines\",\n      \"Async processing\"\n    ],\n    \"databases\": [\n      \"PostgreSQL\",\n      \"MySQL\",\n      \"MongoDB\"\n    ],\n    \"cloud_devops\": [\n      \"Azure\",\n      \"Docker\",\n      \"CI/CD\"\n    ],\n    \"concepts\": [\n      \"System Design\",\n      \"Design Patterns\",\n      \"Indexing\",\n      \"Query Optimization\",\n      \"Partitioning\",\n      \"Sharding\",\n      \"HTTP/1.1\",\n      \"HTTP/2\",\n      \"HTTP/3\",\n      \"Short Polling\",\n      \"Long Polling\",\n      \"WebSockets\",\n      \"TCP/IP\",\n      \"TLS\",\n      \"Data Structures\",\n      \"Algorithms\",\n      \"Operating Systems\",\n      \"OOP\"\n    ]\n  },\n  \"must_have_keywords\": [\n    \"Python\",\n    \"Django\",\n    \"FastAPI\",\n    \"Node.js\",\n    \"JavaScript\",\n    \"Backend\",\n    \"REST API\",\n    \"PostgreSQL\",\n    \"Docker\",\n    \"Software Engineer\",\n    \"Software Developer\",\n    \"SDE\",\n    \"Full Stack\",\n    \"Celery\",\n    \"Redis\",\n    \"Kafka\",\n    \"System Design\",\n    \"Microservices\"\n  ],\n  \"reject_keywords\": [\n    \"10+ years\",\n    \"15+ years\",\n    \"Staff Engineer\",\n    \"Principal Engineer\",\n    \"Director\",\n    \"VP\",\n    \"SAP\",\n    \"Salesforce\",\n    \"BlueYonder\",\n    \"iOS Developer\",\n    \"Android Developer\",\n    \"Embedded Systems\",\n    \"VLSI\",\n    \"FPGA\",\n    \"Data Entry\",\n    \"Manual Testing\"\n  ],\n  \"experience\": [\n    {\n      \"title\": \"Software Engineer Intern (Backend)\",\n      \"company\": \"Storyvord\",\n      \"type\": \"SaaS startup ($197K ARR)\",\n      \"location\": \"London, UK (Remote)\",\n      \"dates\": \"Jul 2024 – Oct 2025\",\n      \"highlights\": [\n        \"Built and scaled backend services using Django and PostgreSQL for production workloads\",\n        \"Implemented distributed async pipelines with Celery + Redis, improving task reliability by 20%\",\n        \"Optimized SQL queries, indexing strategies, caching, and APIs, reducing latency by up to 40%\",\n        \"Designed backend services with fault tolerance, retries, and graceful degradation\",\n        \"Worked on Azure + Docker deployments, improving service availability\",\n        \"Promoted to SDE Intern based on consistent impact\"\n      ]\n    },\n    {\n      \"title\": \"Backend Developer Intern\",\n      \"company\": \"Mr. Loggage\",\n      \"location\": \"Vadodara, India\",\n      \"dates\": \"Jul 2024 – Sep 2024\",\n      \"highlights\": [\n        \"Developed RESTful APIs using Express.js, reducing integration issues by 25%\",\n        \"Improved debugging efficiency through structured logging with Winston and Morgan\",\n        \"Collaborated in cross-functional teams using Git-based workflows\"\n      ]\n    }\n  ],\n  \"projects\": [\n    {\n      \"name\": \"VidPipeline\",\n      \"github\": \"https://github.com/Kaushik-Shahare/VidPipeline\",\n      \"year\": \"2025\",\n      \"subtitle\": \"Distributed Video Processing Backend\",\n      \"tech\": \"FastAPI, Kafka, Celery, PostgreSQL\",\n      \"highlights\": [\n        \"Built a distributed video-processing pipeline handling large uploads via async workflows\",\n        \"Designed event-driven architecture using Kafka for transcoding and metadata extraction\",\n        \"Implemented fault-tolerant background workers with retries and concurrency controls\"\n      ]\n    },\n    {\n      \"name\": \"MedAudit\",\n      \"github\": \"https://github.com/Kaushik-Shahare/MedAudit\",\n      \"year\": \"2025\",\n      \"subtitle\": \"Healthcare Automation Platform\",\n      \"tech\": \"Django, PostgreSQL, LangGraph\",\n      \"highlights\": [\n        \"Led backend development for a multi-agent system automating healthcare workflows\",\n        \"Built an insurance claim validation pipeline focusing on data integrity and auditability\",\n        \"Designed the system to reduce manual healthcare evaluation overhead\"\n      ]\n    }\n  ],\n  \"education\": {\n    \"institution\": \"Parul Institute of Technology\",\n    \"degree\": \"B.Tech in Computer Science and Engineering\",\n    \"gpa\": \"8.21 / 10\",\n    \"dates\": \"Aug 2022 – Jun 2026\",\n    \"location\": \"Vadodara, Gujarat\",\n    \"coursework\": [\n      \"Data Structures and Algorithms\",\n      \"Operating Systems\",\n      \"Database Systems\",\n      \"Distributed Systems\",\n      \"Cloud Computing\"\n    ]\n  },\n  \"achievements\": [\n    \"Winner — Code Crafters, flagship college-level DSA competition with 800+ participants\",\n    \"2nd Runner-Up — National-level Healthcare Hackathon by myOnsite Healthcare (150+ teams)\"\n  ]\n}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2280,
+        288
+      ],
+      "id": "candidate-context-node",
+      "name": "Candidate Context"
+    },
+    {
+      "parameters": {
+        "jsCode": "const fs = require('fs');\nconst output = [];\n\nfor (const item of items) {\n  const job = item.json;\n  let old_resume_content = \"\";\n  const titleCode = job.title_code;\n\n  if (titleCode) {\n    try {\n      const dirPath = '/latex/generated/';\n      if (fs.existsSync(dirPath)) {\n        const files = fs.readdirSync(dirPath).filter(f => f.startsWith(titleCode) && f.endsWith('.tex'));\n        if (files.length > 0) {\n          files.sort();\n          const latestFile = files[files.length - 1];\n          old_resume_content = fs.readFileSync(dirPath + latestFile, 'utf8');\n        }\n      }\n    } catch (e) {}\n  }\n\n  output.push({\n    json: {\n      ...job,\n      old_resume_content,\n      has_old_resume: old_resume_content !== \"\"\n    }\n  });\n}\nreturn output;"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -2176,
-        450
+        -750,
+        100
       ],
-      "id": "read-profile-8rasg",
-      "name": "Read Profile"
+      "id": "find-old-resume",
+      "name": "Find Old Resume"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -300,
+        100
+      ],
+      "id": "merge-resume-data",
+      "name": "Merge Resume Data"
     }
   ],
   "pinData": {
@@ -4498,12 +4536,7 @@
       "main": [
         [
           {
-            "node": "Linkedin Jobs URL",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Read Profile",
+            "node": "Candidate Context",
             "type": "main",
             "index": 0
           }
@@ -4635,9 +4668,9 @@
       "main": [
         [
           {
-            "node": "Compile Resume API",
+            "node": "Merge Resume Data",
             "type": "main",
-            "index": 0
+            "index": 1
           }
         ]
       ]
@@ -4657,14 +4690,14 @@
       "main": [
         [
           {
-            "node": "Resume Builder Agent",
+            "node": "Find Old Resume",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "Resume Builder Agent",
+            "node": "Find Old Resume",
             "type": "main",
             "index": 0
           }
@@ -4676,6 +4709,44 @@
         [
           {
             "node": "Queue Jobs for Application1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Old Resume": {
+      "main": [
+        [
+          {
+            "node": "Resume Builder Agent",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge Resume Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Resume Data": {
+      "main": [
+        [
+          {
+            "node": "Compile Resume API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Candidate Context": {
+      "main": [
+        [
+          {
+            "node": "Linkedin Jobs URL",
             "type": "main",
             "index": 0
           }
