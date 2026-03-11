@@ -84,6 +84,12 @@ def build_resume():
                 fixed_content = re.sub(r'(?<!\\)%', r'\\%', fixed_content)
                 fixed_content = re.sub(r'(?<!\\)#', r'\\#', fixed_content)
                 
+                # Fix Illegal character in array arg (e.g. & in tabular column definition)
+                # LLM often writes \begin{tabular}{l l & r} which is invalid, should be \begin{tabular}{llr}
+                fixed_content = re.sub(r'\\begin\{tabular\}\{([^\}]+)\}', 
+                                       lambda m: '\\begin{tabular}{' + m.group(1).replace('&', '').replace(' ', '') + '}', 
+                                       fixed_content)
+                
                 if fixed_content != latex_content:
                     latex_content = fixed_content
                     with open(filepath, 'w', encoding='utf-8') as f:
